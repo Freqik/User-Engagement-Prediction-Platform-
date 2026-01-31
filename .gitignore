@@ -8,13 +8,16 @@ env/
 venv/
 .env
 
-# Data (Optional: Uncomment if you want to exclude data)
+# Data
 # data/raw/
 # data/processed/
 
 # Logs
 *.log
 artifacts/training.log
+
+# Private Documentation
+artifacts/interview_guide.md
 
 # OS
 .DS_Store
