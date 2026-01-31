@@ -118,5 +118,8 @@ We employ a **Champion-Challenger** strategy:
 
 ---
 
-## 👥 Contact
-Developed by **[Your Name/Antigravity]** for the User Engagement Prediction Platform initiative.
+## 👏 Acknowledgements
+**Dataset Source:** [Telco Customer Churn (80% Accuracy)](https://www.kaggle.com/code/danishmubashar/telco-customer-churn-80-accuracy)  
+**Author:** Danish Mubashar  
+Special thanks to the author for providing the dataset and initial analysis inspiration.
+
