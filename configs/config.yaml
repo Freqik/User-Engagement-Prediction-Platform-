@@ -1,0 +1,49 @@
+project:
+  name: "User Engagement & Churn Prediction"
+  version: "1.0.0"
+  random_seed: 42
+
+data:
+  raw_path: "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv"
+  processed_path: "data/processed/clean_data.csv"
+  train_path: "data/splits/train.csv"
+  test_path: "data/splits/test.csv"
+  target_col: "Churn"
+  churn_label: "Yes"
+
+feature_engineering:
+  categorical_cols:
+    - "gender"
+    - "Partner"
+    - "Dependents"
+    - "PhoneService"
+    - "MultipleLines"
+    - "InternetService"
+    - "OnlineSecurity"
+    - "OnlineBackup"
+    - "DeviceProtection"
+    - "TechSupport"
+    - "StreamingTV"
+    - "StreamingMovies"
+    - "Contract"
+    - "PaperlessBilling"
+    - "PaymentMethod"
+  numerical_cols:
+    - "tenure"
+    - "MonthlyCharges"
+    - "TotalCharges"
+
+modeling:
+  baseline:
+    class_weight: "balanced"
+    solver: "liblinear"
+  challenger:
+    model_type: "xgboost"  # or lightgbm
+    scale_pos_weight: 1.0  # Will be dynamically updated based on imbalance
+    n_estimators: 100
+    max_depth: 5
+    learning_rate: 0.1
+
+logging:
+  level: "INFO"
+  log_file: "artifacts/training.log"

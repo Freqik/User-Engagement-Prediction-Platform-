@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Loyalty Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338ca;
+            --bg-body: #111827;
+            --bg-card: #1F2937;
+            --text-main: #F3F4F6;
+            --text-secondary: #9CA3AF;
+            --border: #374151;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #818cf8, #c4b5fd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .helper-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        input,
+        select {
+            background-color: #374151;
+            border: 1px solid #4B5563;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        /* Placeholder Color Fix for Dark Mode */
+        ::placeholder {
+            color: #9CA3AF;
+            opacity: 1;
+        }
+
+        .section-title {
+            grid-column: 1 / -1;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .result-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+            border-left: 5px solid transparent;
+        }
+
+        .result-section.low {
+            border-left-color: var(--success);
+        }
+
+        .result-section.medium {
+            border-left-color: var(--warning);
+        }
+
+        .result-section.high {
+            border-left-color: var(--danger);
+        }
+
+        .risk-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .risk-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        /* Adjusted badge colors for dark mode visibility */
+        .badge-low {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .badge-medium {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .badge-high {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .probability-container {
+            background-color: #374151;
+            /* Darker bg for container */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .prob-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-bg {
+            background-color: #4B5563;
+            /* Dark gray track */
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            transition: width 1s ease-out;
+        }
+
+        .explanation-box {
+            background-color: #374151;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        details {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        summary {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Customer Loyalty Analyzer</h1>
+            <div class="subtitle">Enter customer details to assess the risk of service cancellation</div>
+        </header>
+
+        <div class="card">
+            <form id="churnForm">
+                <div class="form-grid">
+
+                    <div class="section-title">👤 Customer Profile</div>
+
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <div class="helper-text">Select the customer's gender identity.</div>
+                        <select name="gender">
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Senior Citizen Status</label>
+                        <div class="helper-text">Is the customer 65 or older?</div>
+                        <select name="SeniorCitizen">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Has Partner?</label>
+                        <div class="helper-text">Does the customer have a partner?</div>
+                        <select name="Partner">
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Has Dependents?</label>
+                        <div class="helper-text">Does the customer live with dependents?</div>
+                        <select name="Dependents">
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+
+                    <div class="section-title">📋 Service Details</div>
+
+                    <div class="form-group">
+                        <label>Time with Company (Months)</label>
+                        <div class="helper-text">Total months the customer has subscribed.</div>
+                        <input type="number" name="tenure" min="0" value="12" required placeholder="e.g. 24">
+                    </div>
+                    <div class="form-group">
+                        <label>Contract Type</label>
+                        <div class="helper-text">Short-term contracts are often riskier.</div>
+                        <select name="Contract">
+                            <option value="Month-to-month">Month-to-month (No commitment)</option>
+                            <option value="One year">One Year Commitment</option>
+                            <option value="Two year">Two Year Commitment</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Internet Service</label>
+                        <div class="helper-text">Type of internet connection.</div>
+                        <select name="InternetService">
+                            <option>DSL</option>
+                            <option>Fiber optic</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                    <!-- Additional Services compacted logic can be here, keeping it simple for UX -->
+
+                    <div class="section-title">💰 Billing Information</div>
+
+                    <div class="form-group">
+                        <label>Monthly Bill ($)</label>
+                        <div class="helper-text">Current monthly subscription cost.</div>
+                        <input type="number" name="MonthlyCharges" step="0.01" value="50.0" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Billed Amount ($)</label>
+                        <div class="helper-text">Cumulative amount paid to date (leave 0 if new).</div>
+                        <input type="number" name="TotalCharges" step="0.01" value="500.0" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <div class="helper-text">How the customer pays their bill.</div>
+                        <select name="PaymentMethod">
+                            <option>Electronic check</option>
+                            <option>Mailed check</option>
+                            <option>Bank transfer (automatic)</option>
+                            <option>Credit card (automatic)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Hidden fields with defaults to satisfy API validation without cluttering UI -->
+                <input type="hidden" name="PhoneService" value="Yes">
+                <input type="hidden" name="MultipleLines" value="No">
+                <input type="hidden" name="OnlineSecurity" value="No">
+                <input type="hidden" name="OnlineBackup" value="No">
+                <input type="hidden" name="DeviceProtection" value="No">
+                <input type="hidden" name="TechSupport" value="No">
+                <input type="hidden" name="StreamingTV" value="No">
+                <input type="hidden" name="StreamingMovies" value="No">
+                <input type="hidden" name="PaperlessBilling" value="Yes">
+
+                <button type="submit" class="btn-submit">Analyze Customer Risk</button>
+            </form>
+        </div>
+
+        <div id="resultCard" class="card result-section">
+            <div class="risk-header">
+                <h2>Risk Assessment Result</h2>
+                <div id="riskBadge" class="risk-badge">Result Pending</div>
+            </div>
+
+            <div class="probability-container">
+                <div class="prob-label">Likelihood to Stop Service: <strong id="probText">0%</strong></div>
+                <div class="progress-bar-bg">
+                    <div id="meterFill" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <p id="resultExplanation">
+                Please submit the form to see the analysis.
+            </p>
+
+            <details>
+                <summary>What does this result mean?</summary>
+                <ul>
+                    <li><strong>Low Risk (Green):</strong> The customer is likely happy and stable. Standard service
+                        applies.</li>
+                    <li><strong>Medium Risk (Orange):</strong> The customer shows some signs of dissatisfaction.
+                        Consider a check-in call.</li>
+                    <li><strong>High Risk (Red):</strong> There is a strong chance this customer will leave soon.
+                        Immediate retention offer recommended.</li>
+                </ul>
+                <p><em>Note: This is a prediction based on historical patterns, not a guarantee.</em></p>
+            </details>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

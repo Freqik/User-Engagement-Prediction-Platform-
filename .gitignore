@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+
+# Data (Optional: Uncomment if you want to exclude data)
+# data/raw/
+# data/processed/
+
+# Logs
+*.log
+artifacts/training.log
+
+# OS
+.DS_Store
+Thumbs.db
